@@ -63,6 +63,8 @@ INSERT INTO sightings (sighting_id,ranger_id,species_id,"location",sighting_time
                 (4,1,2,'Snowfall Pass','2024-05-18 18:30:00',NULL);
 
 
+-- in sightings table ranger_id and species_id not placed like sample questions. 
+
 SELECT * from rangers;
 
 SELECT * FROM species;
@@ -97,8 +99,39 @@ where species_id NOT IN(
     from sightings
 )
 
+-- problem 6
+
+select s.common_name , sh.sighting_time, r."name" 
+from species s
+join sightings sh on s.species_id = sh.species_id
+join rangers r on r.ranger_id = sh.ranger_id
+order by sighting_time DESC
+limit 2;
 
 
+-- problem 7
+
+update species
+set conservation_status = 'Historic'
+where extract(year from discovery_date) < 1800
+
+-- problem 8
+
+SELECT sighting_id , 
+CASE 
+    WHEN extract(HOUR from sighting_time) < 12 THEN  'Morning'
+    WHEN extract(HOUR from sighting_time) >= 12 and extract(HOUR from sighting_time) <5 THEN  'Afternoon'
+    ELSE  
+    'Evening'
+END as "time_of_day"
+from sightings
 
 
- 
+-- problem 9
+
+DELETE from rangers 
+where ranger_id NOT IN (
+    SELECT DISTINCT ranger_id 
+    from sightings
+)
+
